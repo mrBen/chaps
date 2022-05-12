@@ -6,7 +6,7 @@ PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/man
 SHAREDIR ?= $(PREFIX)/share
-PYTHON ?= /usr/bin/env python
+PYTHON ?= /usr/bin/env python3
 QUIET ?= @
 SHELL=/bin/bash
 
