@@ -97,9 +97,7 @@ def sanitize_filename(s, restricted=False, is_id=False):
         return char
 
     # Handle timestamps
-    s = re.sub(
-        r"[0-9]+(?::[0-9]+)+", lambda m: m.group(0).replace(":", "_"), s
-    )
+    s = re.sub(r"[0-9]+(?::[0-9]+)+", lambda m: m.group(0).replace(":", "_"), s)
     result = "".join(map(replace_insane, s))
     if not is_id:
         while "__" in result:
@@ -226,7 +224,7 @@ def parse_duration(s):
 def extract_chapters_txt(description, duration):
     if not description:
         return None
-    chapter_lines = search_all(r"^.*(((\d|)\d:|)\d|)\d:\d\d.*$", description,)
+    chapter_lines = search_all(r"^.*(((\d|)\d:|)\d|)\d:\d\d.*$", description)
     if not chapter_lines:
         return None
     for idx, chap in enumerate(chapter_lines):
@@ -235,9 +233,7 @@ def extract_chapters_txt(description, duration):
         chapter_lines[idx] = (chap_name, time_point)
     chapters = []
     _id = 0
-    for next_num, (chapter_line, time_point) in enumerate(
-        chapter_lines, start=1
-    ):
+    for next_num, (chapter_line, time_point) in enumerate(chapter_lines, start=1):
         start_time = parse_duration(time_point)
         if start_time is None:
             continue
@@ -254,9 +250,7 @@ def extract_chapters_txt(description, duration):
             end_time = duration
         if start_time > end_time:
             break
-        chapter_title = re.sub(r"<a[^>]+>[^<]+</a>", "", chapter_line).strip(
-            " \t-"
-        )
+        chapter_title = re.sub(r"<a[^>]+>[^<]+</a>", "", chapter_line).strip(" \t-")
         chapter_title = re.sub(r"\s+", " ", chapter_title)
         chapters.append(
             {

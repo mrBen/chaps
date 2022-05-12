@@ -85,9 +85,7 @@ def get_format_from_json(jinfos):
     return fmt
 
 
-def run_ffmpeg(
-    input_path, out_path, opts, duration=None, status=None,
-):
+def run_ffmpeg(input_path, out_path, opts, duration=None, status=None):
     args = get_args()
     cmd = ["ffmpeg", "-y", "-i", input_path]
     cmd += opts
@@ -175,11 +173,7 @@ def extract_chapter(chap, metadata, fmt, filename, cur=0, tot=0, status=None):
     args = get_args()
     sanitize = lambda v: sanitize_filename(v, args.restrictfilenames)
 
-    vprint(
-        '\033[K[chaps] Extracting chapter "{}"...'.format(
-            chap["tags"]["title"]
-        )
-    )
+    vprint('\033[K[chaps] Extracting chapter "{}"...'.format(chap["tags"]["title"]))
     if args.progress and args.njobs == 1:
         status.chapters.chap = cur
         status.chapters_progress.set_value((cur - 1) / tot)
@@ -205,9 +199,7 @@ def extract_chapter(chap, metadata, fmt, filename, cur=0, tot=0, status=None):
     ]
     if args.codeccopy:
         command += ["-codec", "copy"]
-    run_ffmpeg(
-        filename, outfile, command, duration=duration, status=status,
-    )
+    run_ffmpeg(filename, outfile, command, duration=duration, status=status)
     if args.progress and args.njobs != 1:
         with lock:
             status = shared_status.get()
@@ -235,23 +227,17 @@ def split_file_on_chapters(filename, jinfos, chapters=None):
 
     oc = args.onlychapters
     working_chapters = [
-        chap
-        for chap in chapters
-        if (oc and ((chap["id"] + 1) in oc)) or oc is None
+        chap for chap in chapters if (oc and ((chap["id"] + 1) in oc)) or oc is None
     ]
 
     if args.njobs == 1:
         # Setup progress bar
         status = make_status_bar(working_chapters)
         for i, chap in enumerate(working_chapters, start=1):
-            extract_chapter(
-                chap, metadata, fmt, filename, i, nb_chaps, status=status
-            )
+            extract_chapter(chap, metadata, fmt, filename, i, nb_chaps, status=status)
     else:
         vprint(
-            "[chaps] Extracting {} chapters with {} jobs".format(
-                nb_chaps, args.njobs
-            )
+            "[chaps] Extracting {} chapters with {} jobs".format(nb_chaps, args.njobs)
         )
         # Setup progress bar
         status = make_multi_status_bar(working_chapters)
@@ -259,7 +245,7 @@ def split_file_on_chapters(filename, jinfos, chapters=None):
         manager = mp.Manager()
         shared_status = manager.Value(Status, status)
         with mp.Pool(
-            args.njobs, initializer=init_child, initargs=(lock, shared_status,)
+            args.njobs, initializer=init_child, initargs=(lock, shared_status)
         ) as pool:
             vargs = [
                 (chap, metadata, fmt, filename, i, nb_chaps)

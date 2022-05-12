@@ -71,13 +71,7 @@ class Progress(Element):
 
 class Piecewise_Progress(Element):
     def __init__(
-        self,
-        nb_pieces=0,
-        value=[],
-        *,
-        width=0,
-        fit=Element.MAXIMIZED,
-        name=None
+        self, nb_pieces=0, value=[], *, width=0, fit=Element.MAXIMIZED, name=None
     ):
         super().__init__(value, width=width, fit=fit, name=name)
         self._nb_pieces = nb_pieces
@@ -107,9 +101,7 @@ class Text(Element):
     LEFT = 0
     RIGHT = 1
 
-    def __init__(
-        self, value="", *, width=0, fit=Element.AUTO, name=None, align=LEFT
-    ):
+    def __init__(self, value="", *, width=0, fit=Element.AUTO, name=None, align=LEFT):
         super().__init__(value, width=width, fit=fit, name=name)
         self._align = align
         self._fmt = None
@@ -138,9 +130,7 @@ class Text(Element):
 
     def __call__(self, *args, **kwargs):
         if self._fmt is None:
-            raise StatusException(
-                "You must give a format before giving values"
-            )
+            raise StatusException("You must give a format before giving values")
         for i, val in enumerate(args):
             name = "v{}".format(i)
             setattr(self, name, val)
@@ -208,9 +198,7 @@ class Status:
         available_space -= len(self._separator) * (len(self._elements) - 1)
         if available_space < 0:
             raise StatusException("There is not enough place to print line")
-        m = [
-            elt for elt in self._elements if elt.get_fit() == Element.MAXIMIZED
-        ]
+        m = [elt for elt in self._elements if elt.get_fit() == Element.MAXIMIZED]
         for elt in m[:-1]:
             elt.set_width(math.floor(available_space / len(m)))
         for elt in m[-1:]:

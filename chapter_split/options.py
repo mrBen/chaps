@@ -65,9 +65,7 @@ def parse_args():
         help="The name of the input file.",
     )
 
-    parser.add_argument(
-        "-V", "--version", action="version", version=get_version(),
-    )
+    parser.add_argument("-V", "--version", action="version", version=get_version())
 
     parser.add_argument(
         "--restrict-filenames",
